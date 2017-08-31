@@ -23,12 +23,12 @@ def fight(board, player_stats, monster_stats):
                 monster_stats["hp"], player_stats["hp"] = deal_damages(player_stats, monster_stats)
 
         if player_stats["hp"] <= 0:
-            print("You died")
             battle_result.append(0)
             return battle_result
 
         elif monster_stats["hp"] <= 0:
             print("You win !")
+            time.sleep(1)
             battle_result.extend((1, player_stats["hp"]))
             return battle_result
 

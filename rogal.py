@@ -5,10 +5,13 @@ import prints
 import terrain
 import hero
 import move
+import time
 
 
 def lost_game():
-    pass
+    print("You died ...")
+    time.sleep(0.5)
+    raise SystemExit
 
 
 def main():
@@ -20,13 +23,13 @@ def main():
     x, y = 1, 3
     hero_symbol = "K"
     player = terrain.insert_object(board, x, y, hero_symbol)
-    goblin = terrain.insert_object(board, 12, 56, "B")
+    #goblin = terrain.insert_object(board, 12, 56, "B")
     #terrain.insert_object(board, 12, 12, "🍶")
     #terrain.insert_object(board, 19, 52, "*")
     #terrain.insert_object(board, 13, 44, "⛑")
     #terrain.insert_object(board, 22, 3, "🗡")
     player_stats = hero.choose_character(board)
-    monster_stats = {"hp":100, "dmg":10, "armor":8}
+    monster_stats = {"hp":150, "dmg":20, "armor":10}
 
 
     while True:
@@ -36,22 +39,22 @@ def main():
         found_object = move_status["found_object"]
         if action == "fight":
             fight_result = battle.fight(board, player_stats, monster_stats)
-            while fight_result[0] == 1:
+            if fight_result[0] == 1:
                 print(fight_result)
                 player_stats["hp"] = "   "
                 prints.print_stats_menu(board, player_stats)
                 player_stats["hp"] = fight_result[1]
                 terrain.insert_object(board, 12, 56, "·")
-                break
-            lost_game()
+            elif fight_result[0] == 0:
+                lost_game()
 
         if action == "chest":
             if found_object == "1":
                 chest_code = ['1','2','3','2','2','3']
                 chest_result = battle.chest(chest_code)
                 if chest_result == 1:
-                    prints.print_inventory(board, "Dagger", 2.4, ["dmg"], [10], player_stats)
-                    prints.print_txt("Znalazłeś sztylet, obrażenia zwiększają się o 10", board)
+                    prints.print_inventory(board, "Dagger", 2.4, ["dmg"], [5], player_stats)
+                    prints.print_txt("Znalazłeś sztylet, obrażenia zwiększają się o 5", board)
                     terrain.insert_object(board, 1, 10, "·")
 
             elif found_object == "2":
