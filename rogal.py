@@ -29,7 +29,11 @@ def main():
     monster_stats = {"hp":100, "dmg":10, "armor":8}
 
     while True:
-        if move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["action"] == "fight":
+        move_status = move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)
+        x, y = move_status["coords"]
+        action = move_status["action"]
+        found_object = move_status["found_object"]
+        if action == "fight":
             fight_result = battle.fight(board, player_stats, monster_stats)
             while fight_result[0] == 1:
                 print(fight_result)
@@ -40,8 +44,8 @@ def main():
                 break
             lost_game()
 
-        if move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["action"] == "chest":
-            if move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["found_object"] == "1":
+        if action == "chest":
+            if found_object == "1":
                 chest_code = ['1','2','3','2','2','3']
                 chest_result = battle.chest(chest_code)
                 if chest_result == 1:
@@ -49,10 +53,7 @@ def main():
                     prints.print_txt("Znalazłeś sztylet, obrażenia zwiększają się o 10", board)
                     terrain.insert_object(board, 1, 10, "·")
 
-
         prints.print_stats_menu(board, player_stats)
-        x = move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["x_coord"]
-        y = move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["y_coord"]
         terrain.insert_object(board, x, y, hero_symbol)
         os.system('clear')
         prints.print_board(board)
