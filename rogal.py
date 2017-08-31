@@ -30,7 +30,11 @@ def main():
 
 
     while True:
-        if move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["action"] == "fight":
+        move_status = move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)
+        x, y = move_status["coords"]
+        action = move_status["action"]
+        found_object = move_status["found_object"]
+        if action == "fight":
             fight_result = battle.fight(board, player_stats, monster_stats)
             while fight_result[0] == 1:
                 print(fight_result)
@@ -41,9 +45,8 @@ def main():
                 break
             lost_game()
 
-        if move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["action"] == "chest": 
-
-            if move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["found_object"] == "1":
+        if action == "chest":
+            if found_object == "1":
                 chest_code = ['1','2','3','2','2','3']
                 chest_result = battle.chest(chest_code)
                 if chest_result == 1:
@@ -51,10 +54,33 @@ def main():
                     prints.print_txt("Znalazłeś sztylet, obrażenia zwiększają się o 10", board)
                     terrain.insert_object(board, 1, 10, "·")
 
+            elif found_object == "2":
+                chest_code = ['3','2','1','2','1','3']
+                chest_result = battle.chest(chest_code)
+                if chest_result == 1:
+                    prints.print_inventory(board, "Light armor", 2.4, ["armor"], [10], player_stats)
+                    prints.print_txt("Znalazłeś lekka zbroje, armor zwiększa się o 10", board)
+                    terrain.insert_object(board, 22, 17, "·")
+                
+            elif found_object == "3":
+                chest_code = ['3','3','3','1','2','1']
+                chest_result = battle.chest(chest_code)
+                if chest_result == 1:
+                    prints.print_inventory(board, "Sword", 2.4, ["dmg"], [15], player_stats)
+                    prints.print_txt("Znalazłeś miecz, obrażenia zwiększają się o 15", board)
+                    terrain.insert_object(board, 1, 10, "·")
+
+            elif found_object == "4":
+                chest_code = ['3','2','2','2','1','2']
+                chest_result = battle.chest(chest_code)
+                if chest_result == 1:
+                    prints.print_inventory(board, "Steel armor", 2.4, ["armor"], [15], player_stats)
+                    prints.print_txt("Znalazłeś stalową zbroje, armor zwiększają się o 15", board)
+                    terrain.insert_object(board, 1, 10, "·")
+
+            
 
         prints.print_stats_menu(board, player_stats)
-        x = move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["x_coord"]
-        y = move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["y_coord"]
         terrain.insert_object(board, x, y, hero_symbol)
         os.system('clear')
         prints.print_board(board)
