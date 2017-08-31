@@ -21,12 +21,13 @@ def main():
     hero_symbol = "K"
     player = terrain.insert_object(board, x, y, hero_symbol)
     goblin = terrain.insert_object(board, 12, 56, "B")
-    terrain.insert_object(board, 12, 12, "🍶")
-    terrain.insert_object(board, 19, 52, "*")
-    terrain.insert_object(board, 13, 44, "⛑")
-    terrain.insert_object(board, 22, 3, "🗡")
+    #terrain.insert_object(board, 12, 12, "🍶")
+    #terrain.insert_object(board, 19, 52, "*")
+    #terrain.insert_object(board, 13, 44, "⛑")
+    #terrain.insert_object(board, 22, 3, "🗡")
     player_stats = hero.choose_character(board)
     monster_stats = {"hp":100, "dmg":10, "armor":8}
+
 
     while True:
         if move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["action"] == "fight":
@@ -40,7 +41,8 @@ def main():
                 break
             lost_game()
 
-        if move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["action"] == "chest":
+        if move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["action"] == "chest": 
+
             if move.go_player(board, x, y, hero_symbol, monsters, items, player_stats, chests)["found_object"] == "1":
                 chest_code = ['1','2','3','2','2','3']
                 chest_result = battle.chest(chest_code)
